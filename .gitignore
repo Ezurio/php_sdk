@@ -6,5 +6,5 @@
 # specific swig build products
 example.php
 php_example.h
-php_sdk.php
-php_php_sdk.h
+lrd_php_sdk.php
+php_lrd_php_sdk.h
