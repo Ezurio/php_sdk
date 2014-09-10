@@ -1,0 +1,10 @@
+*.o
+*~
+*_wrap.c
+*.so
+
+# specific swig build products
+example.php
+php_example.h
+php_sdk.php
+php_php_sdk.php
