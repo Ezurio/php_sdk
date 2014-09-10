@@ -15,7 +15,10 @@ test-example: example.so
 	phpunit unit_example.php
 
 clean:
-	-rm php_sdk.stamp
+	-rm -f php_sdk.stamp
+	-rm -f example.php php_example.h
+	-rm -f php_sdk.php php_php_sdk.h
+	-rm -f *.o *.so *_wrap.c
 
 .PHONY: all clean test install-example
 .DEFAULT: all
