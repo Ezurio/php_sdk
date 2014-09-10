@@ -1,6 +1,6 @@
 /* php_sdk.i */
 
-%module php_sdk
+%module lrd_php_sdk
 %{
 	/* Put header files here or function declarations like below */
 	extern double My_variable;
