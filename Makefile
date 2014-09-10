@@ -1,8 +1,9 @@
 $(info php_sdk makefile)
 
 all:
-	@echo "made all"
-	touch php_sdk.stamp
+	swig -php example.i
+	gcc -c -fpic example.c example_wrap.c -I/usr/include -I/usr/include/php5 -I/usr/include/php5/Zend -I/usr/include/php5/main -I/usr/include/php5/TSRM
+	gcc -shared example.o example_wrap.o -o example.so
 
 clean:
 	-rm php_sdk.stamp
