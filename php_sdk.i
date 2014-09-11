@@ -3,7 +3,7 @@
 %module lrd_php_sdk
 %include "cpointer.i"
 %pointer_functions( unsigned long, ulongp )
-%pointer_functions( char, charp)
+
 
 %{
 	#include "sdc_sdk.h"

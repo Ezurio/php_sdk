@@ -25,9 +25,8 @@ $rval = GetCurrentStatus( $statusH );
 print "GetCurrentStatus returned $rval\n";
 print "     state: $statusH->cardState\n";
 
-$interfaceNameH = new_charp();
-$rval = GetWifiInterfaceName($interfaceNameH);
-$interfaceName = charp_value($interfaceNameH);
+$interfaceName = ".................";
+$rval = GetWifiInterfaceName($interfaceName);
 print "GetWifiInterfaceName returned $rval\n";
 print "     interface: $interfaceName \n";
 
