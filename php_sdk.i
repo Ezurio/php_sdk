@@ -1,13 +1,33 @@
+/*
+#
+# Copyright (c) 2015, Laird
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+#--------------------------------------------------------------------------*/
 /* php_sdk.i */
 
 %module lrd_php_sdk
+%include <carrays.i>
 %include "cpointer.i"
 %pointer_functions( unsigned long, ulongp )
-
-
+%array_functions( unsigned char, uchar_array )
 %{
 	#include "sdc_sdk.h"
 %}
+
+#define LRD_PHP_SDK_VERSION_MAJOR 0
+#define LRD_PHP_SDK_VERSION_MINOR 0
+#define LRD_PHP_SDK_VERSION_REVISION 1
+#define LRD_PHP_VERSION_SUB_REVISION 1
 
 #define CONFIG_NAME_SZ  33
 #define SSID_SZ         33
@@ -447,12 +467,12 @@ typedef struct _SDCGlobalConfig {
 	unsigned long PMKcaching;   //0 standard, 1 opportunistic key caching enabled
 	unsigned long defAdhocChannel; // when no beacons found this channel is used
 	unsigned long silentRunning;	 //	enables silent running mode (no active scans unless connected)
-	unsigned long scanDFSTime;	//20-500 ms, default of 160 ms. Maximum time spent scanning each DFS channel during a scan.
-	unsigned long suppInfo;		
-#define SUPPINFO_FIPS (1U<<0)                     //bit 0 is Summit FIPS enable 
+	unsigned long scanDFSTime;	//20-500 ms, default of 120 ms. Maximum time spent scanning each DFS channel during a scan.
+	unsigned long suppInfo;
+#define SUPPINFO_FIPS (1U<<0)                     //bit 0 is Summit FIPS enable
                                                   //bit 1 is reserved
-#define SUPPINFO_TLS_TIME_CHECK (1U<<2)           //bit 2 is CA cert date-check 
-#define SUPPINFO_WPA1_ORIGINAL_OPERATION (1U<< 3) //bit 3 is pre 2014 WPA1 operation 
+#define SUPPINFO_TLS_TIME_CHECK (1U<<2)           //bit 2 is CA cert date-check
+#define SUPPINFO_WPA1_ORIGINAL_OPERATION (1U<< 3) //bit 3 is pre 2014 WPA1 operation
 	unsigned long uAPSD;          // UAPSD bitmasks
 	unsigned long txMaxA;	      // A radio - to account for high gain antennae-- %
 	unsigned long adminFiles;   // allows import/export of settings to file
@@ -461,10 +481,11 @@ typedef struct _SDCGlobalConfig {
 	unsigned long authServerType; //0 ACS (type 1), 1 SBR (type 2)
 	unsigned long TTLSInnerMethod;//0 auto-EAP
 	unsigned long aLRS; //bit 0 = chan 36, bit 1 =chan 40, etc
-	unsigned short roamPeriodms; //Roam scan period in milliseconds, valid range 10 - 600000
-	unsigned short Reserved; // future expansion of the global config......
-	unsigned long Reserved1; // future expansion of the global config......
+	unsigned short roamPeriodms; //Roam scan period in milliseconds, valid range 10 - 60000
+	unsigned short BeaconMissTimeout; // 45 and later radios only.  1000-5000 TUs
+	unsigned long Reserved; // future expansion of the global config......
 } SDCGlobalConfig;
+
 
 
 typedef struct _SDC3rdPartyConfig {
@@ -646,7 +667,7 @@ SDCERR GetSDKVersion(unsigned long *version);
 	typedef struct _LRD_WF_SSID{
 		unsigned char len;
 		unsigned char val[LRD_WF_MAX_SSID_LEN];
-										  // Note that the val is not a string 
+										  // Note that the val is not a string
 										  // and can have embedded NULL and non-
 										  // printable characters.  Also note
 										  // that val does not have a null
@@ -656,7 +677,7 @@ SDCERR GetSDKVersion(unsigned long *version);
 	typedef struct _LRD_WF_SCAN_INFO_ITEM{
 		int             channel;
 		int             rssi;
-		unsigned int    securityMask; // bit mask of WEPTYPE enums indicating 
+		unsigned int    securityMask; // bit mask of WEPTYPE enums indicating
 									  // supported types
 		LRD_WF_BSSTYPE  bssType;
 		unsigned int    reserved;
