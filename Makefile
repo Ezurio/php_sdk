@@ -45,7 +45,7 @@ install-php_sdk:
 	cd `php-config --extension-dir` && ln -s $(LIB).so.$(PHP_SDK_REV) $(LIB).so
 
 test-php_sdk: $(LIB)
-	phpunit unit_php_sdk.php
+	cd unit/ && phpunit unit_sdk_GetVersion.php
 
 clean:
 	-rm -f *.h *.o *.so* *_wrap.c
