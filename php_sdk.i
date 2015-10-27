@@ -13,53 +13,80 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #--------------------------------------------------------------------------*/
-/* php_sdk.i */
+
+/* Please reference sdc_sdk.h for function definition and usage. */
 
 %module lrd_php_sdk
 %include <carrays.i>
 %include "cpointer.i"
+%include "phppointers.i"
 %pointer_functions( unsigned long, ulongp )
+%pointer_functions( int, intp )
 %array_functions( unsigned char, uchar_array )
 %{
 	#include "sdc_sdk.h"
 %}
+%pointer_functions( FCC_TEST, FCC_TESTp )
+%pointer_functions( BITRATE, BITRATEp )
+%pointer_functions( TXPOWER, TXPOWERp )
+%pointer_functions( WEPLEN, WEPLENp )
+%pointer_functions( CERTLOCATION, CERTLOCATIONp )
+%pointer_functions( RADIOCHIPSET, RADIOCHIPSETp )
+%pointer_functions( WF_SUPP_LOGLEVEL, WF_SUPP_LOGLEVELp )
 
-#define LRD_PHP_SDK_VERSION_MAJOR 0
-#define LRD_PHP_SDK_VERSION_MINOR 0
-#define LRD_PHP_SDK_VERSION_REVISION 1
-#define LRD_PHP_VERSION_SUB_REVISION 1
+#define LRD_PHP_SDK_VERSION_MAJOR 3
+#define LRD_PHP_SDK_VERSION_MINOR 5
+#define LRD_PHP_SDK_VERSION_REVISION 2
+#define LRD_PHP_VERSION_SUB_REVISION 0
 
 #define CONFIG_NAME_SZ  33
 #define SSID_SZ         33
 #define CLIENT_NAME_SZ  17
+#define MAC_AS_ASCII_SZ 18
 #define USER_NAME_SZ    65
 #define USER_PWD_SZ     65
 #define PSK_SZ          65
 #define MAX_CFGS        20
 #define NUM_WEP_KEYS    4
+#define MAC_ADDR_SZ     6
+#define IPv4_ADDR_SZ    4
 #define PDELAY_LOW      0
 #define PDELAY_HIGH     7200000
 #define PTIME_LOW       0
 #define PTIME_HIGH      30000
+#define BEACONMISSTIME_LOW      1000
+#define BEACONMISSTIME_HIGH     5000
 #define FRAG_LOW        256
 #define FRAG_HIGH       2346
 #define RTS_LOW         0
 #define RTS_HIGH        2347
 #define AUTH_LOW        3
 #define AUTH_HIGH       60
-#define SCANDFSTIME_LOW 20 //ms
-#define SCANDFSTIME_HIGH 500 //ms
+#define PROBE_DELAY_LOW         2
+#define PROBE_DELAY_HIGH      120
+#define ROAM_DELTA_LOW          2
+#define ROAM_DELTA_HIGH        55
+#define ROAM_PERIOD_LOW         0
+#define ROAM_PERIOD_HIGH       60
+#define ROAM_PERIOD_MS_LOW     10
+#define ROAM_PERIOD_MS_HIGH 60000
+#define ROAM_TRIGGER_LOW       50
+#define ROAM_TRIGGER_HIGH      90
+#define SCANDFSTIME_LOW        20
+#define SCANDFSTIME_HIGH      500
+#define TX_MAX_LOW              0
+#define TX_MAX_HIGH           100
 #define MAX_CERT_PATH   65
-#define CRED_CA_POS     72 //in SDCConfig userName.buffer
-#define CRED_UCA_POS    72 //in SDCConfig userPwd.buffer
-#define CRED_PFILE_POS  34 //in SDCConfig userPwd.buffer
-#define CRED_CERT_SZ    48 //for CRED_CA and CRED_UCA
+#define CRED_CA_POS     72
+#define CRED_UCA_POS    72
+#define CRED_PFILE_POS  34
+#define CRED_CERT_SZ    48
 #define CRED_PFILE_SZ   32
-#define USER_CERT_PW_SZ 64 //in SDCCondif userPwd.buffer
+#define USER_CERT_PW_SZ 64
 #define LRS_MAX_CHAN	  32
 
-typedef enum _SDCERR {
-	SDCERR_SUCCESS = 0,
+enum SDCERR {
+	SDCERR_SUCCESS,
 	SDCERR_FAIL,
 	SDCERR_INVALID_NAME,
 	SDCERR_INVALID_CONFIG,
@@ -73,16 +100,16 @@ typedef enum _SDCERR {
 	SDCERR_NOT_IMPLEMENTED,
 	SDCERR_NO_HARDWARE,
 	SDCERR_INVALID_VALUE
-} SDCERR;
+};
 
-typedef enum _AUTH {
-	AUTH_OPEN = 0,
+enum AUTH {
+	AUTH_OPEN,
 	AUTH_SHARED,
 	AUTH_NETWORK_EAP,
-} AUTH;
+};
 
-typedef enum _EAPTYPE {
-	EAP_NONE = 0,
+enum EAPTYPE {
+	EAP_NONE,
 	EAP_LEAP,
 	EAP_EAPFAST,
 	EAP_PEAPMSCHAP,
@@ -91,16 +118,16 @@ typedef enum _EAPTYPE {
 	EAP_EAPTTLS,
 	EAP_PEAPTLS,
 	EAP_WAPI_CERT
-} EAPTYPE;
+};
 
-typedef enum _POWERSAVE {
-	POWERSAVE_OFF = 0,
+enum POWERSAVE {
+	POWERSAVE_OFF,
 	POWERSAVE_MAX,
 	POWERSAVE_FAST,
-} POWERSAVE;
+};
 
-typedef enum _WEPTYPE {
-	WEP_OFF = 0,
+enum WEPTYPE {
+	WEP_OFF,
 	WEP_ON,
 	WEP_AUTO,
 	WPA_PSK,
@@ -117,10 +144,10 @@ typedef enum _WEPTYPE {
 	WPA2_TKIP,
 	WAPI_PSK,
 	WAPI_CERT
-} WEPTYPE;
+};
 
-typedef enum _RADIOMODE {
-	RADIOMODE_B_ONLY = 0,
+enum RADIOMODE {
+	RADIOMODE_B_ONLY,
 	RADIOMODE_BG,
 	RADIOMODE_G_ONLY,
 	RADIOMODE_BG_LRS,
@@ -133,168 +160,168 @@ typedef enum _RADIOMODE {
 	RADIOMODE_ABGN,
 	RADIOMODE_BGAN,
 	RADIOMODE_BGN
-} RADIOMODE;
+};
 
-typedef enum _TXPOWER {
-	TXPOWER_MAX=0,
-	TXPOWER_1=1,
-	TXPOWER_5=5,
-	TXPOWER_10=10,
-	TXPOWER_20=20,
-	TXPOWER_30=30,
-	TXPOWER_50=50,
-} TXPOWER;
+enum TXPOWER {
+	TXPOWER_MAX,
+	TXPOWER_1,
+	TXPOWER_5,
+	TXPOWER_10,
+	TXPOWER_20,
+	TXPOWER_30,
+	TXPOWER_50,
+};
 
-typedef enum _BITRATE {
-	BITRATE_AUTO  = 0,
-	BITRATE_1     = 2,
-	BITRATE_2     = 4,
-	BITRATE_5_5   = 11,
-	BITRATE_6     = 12,
-	BITRATE_9     = 18,
-	BITRATE_11    = 22,
-	BITRATE_12    = 24,
-	BITRATE_18    = 36,
-	BITRATE_24    = 48,
-	BITRATE_36    = 72,
-	BITRATE_48    = 96,
-	BITRATE_54    = 108,
-	BITRATE_6_5   = 13,
-	BITRATE_13    = 26,
-	BITRATE_19_5  = 39,
-	BITRATE_26    = 52,
-	BITRATE_39    = 78,
-	BITRATE_52    = 104,
-	BITRATE_58_5  = 117,
-	BITRATE_65    = 130,
-	BITRATE_72    = 144,
-    BITRATE_7_2   = 14,
-    BITRATE_14_4  = 28,
-    BITRATE_21_7  = 42,
-    BITRATE_28_9  = 56,
-    BITRATE_43_3  = 86,
-    BITRATE_57_8  = 114
-} BITRATE;
+enum BITRATE {
+	BITRATE_AUTO,
+	BITRATE_1,
+	BITRATE_2,
+	BITRATE_5_5,
+	BITRATE_6,
+	BITRATE_9,
+	BITRATE_11,
+	BITRATE_12,
+	BITRATE_18,
+	BITRATE_24,
+	BITRATE_36,
+	BITRATE_48,
+	BITRATE_54,
+	BITRATE_6_5,
+	BITRATE_13,
+	BITRATE_19_5,
+	BITRATE_26,
+	BITRATE_39,
+	BITRATE_52,
+	BITRATE_58_5,
+	BITRATE_65,
+	BITRATE_72,
+	BITRATE_7_2,
+	BITRATE_14_4,
+	BITRATE_21_7,
+	BITRATE_28_9,
+	BITRATE_43_3,
+	BITRATE_57_8,
+};
 
-typedef enum _PREAMBLE {
-	PRE_AUTO = 0,
+enum PREAMBLE {
+	PRE_AUTO,
 	PRE_SHORT,
 	PRE_LONG,
-} PREAMBLE;
+};
 
-typedef enum _GSHORTSLOT {
-	GSHORT_AUTO = 0,
+enum GSHORTSLOT {
+	GSHORT_AUTO,
 	GSHORT_OFF,
 	GSHORT_ON,
-} GSHORTSLOT;
+};
 
-typedef enum _BT_COEXIST {
-	BT_OFF  = 0,
+enum BT_COEXIST {
+	BT_OFF,
 	BT_ON,
-} BT_COEXIST;
+};
 
-typedef enum _REGDOMAIN {
-	REG_FCC   = 0,	// North America, South America, Central America, Australia, New Zealand, various parts of Asia
-	REG_ETSI  = 1,	// Europe, Middle East, Africa, various parts of Asia
-	REG_TELEC = 2,	// Japan
-	REG_WW    = 3,	// World Wide
-	REG_KCC   = 4,	// Korea
-	REG_CA    = 5,	// Canada
-	REG_FR    = 6,	// France
-	REG_GB    = 7,	// United Kingdom
-	REG_AU    = 8,	// Australia
-	REG_NZ    = 9,	// New Zealand
-	REG_CN    = 10,	// China
-} REG_DOMAIN;
+enum REG_DOMAIN {
+	REG_FCC,
+	REG_ETSI,
+	REG_TELEC,
+	REG_WW,
+	REG_KCC,
+	REG_CA,
+	REG_FR,
+	REG_GB,
+	REG_AU,
+	REG_NZ,
+	REG_CN,
+	REG_BR,
+	REG_RU,
+};
 
-typedef enum _PING_PAYLOAD {
-	PP_32    = 32,
-	PP_64    = 64,
-	PP_128   = 128,
-	PP_256   = 256,
-	PP_512   = 512,
-	PP_1024  = 1024
-} PING_PAYLOAD;
+enum PING_PAYLOAD {
+	PP_32,
+	PP_64,
+	PP_128,
+	PP_256,
+	PP_512,
+	PP_1024,
+};
 
-typedef enum _RX_DIV {
-	RXDIV_MAIN = 0,
+enum RX_DIV {
+	RXDIV_MAIN,
 	RXDIV_AUX,
 	RXDIV_START_AUX,
 	RXDIV_START_MAIN,
-} RX_DIV;
+};
 
-typedef enum _TX_DIV {
-	TXDIV_MAIN = 0,
+enum TX_DIV {
+	TXDIV_MAIN,
 	TXDIV_AUX,
-	TXDIV_ON=3,
-} TX_DIV;
+	TXDIV_ON,
+};
 
-typedef enum _ROAM_TRIG {
-	RTRIG_50 = 50,
-	RTRIG_55 = 55,
-	RTRIG_60 = 60,
-	RTRIG_65 = 65,
-	RTRIG_70 = 70,
-	RTRIG_75 = 75,
-	RTRIG_80 = 80,
-	RTRIG_85 = 85,
-	RTRIG_90 = 90,
-} ROAM_TRIG;
+enum ROAM_TRIG {
+	RTRIG_50,
+	RTRIG_55,
+	RTRIG_60,
+	RTRIG_65,
+	RTRIG_70,
+	RTRIG_75,
+	RTRIG_80,
+	RTRIG_85,
+	RTRIG_90,
+};
 
-typedef enum _ROAM_DELTA {
-	RDELTA_0  = 0,
-	RDELTA_5  = 5,
-	RDELTA_10 = 10,
-	RDELTA_15 = 15,
-	RDELTA_20 = 20,
-	RDELTA_25 = 25,
-	RDELTA_30 = 30,
-	RDELTA_35 = 35,
-	RDELTA_40 = 40,
-	RDELTA_45 = 45,
-	RDELTA_50 = 50,
-	RDELTA_55 = 55,
-} ROAM_DELTA;
+enum ROAM_DELTA {
+	RDELTA_0,
+	RDELTA_5,
+	RDELTA_10,
+	RDELTA_15,
+	RDELTA_20,
+	RDELTA_25,
+	RDELTA_30,
+	RDELTA_35,
+	RDELTA_40,
+	RDELTA_45,
+	RDELTA_50,
+	RDELTA_55,
+};
 
-typedef enum _ROAM_PERIOD {
-	RPERIOD_0   = 0,
-	RPERIOD_5   = 5,
-	RPERIOD_10  = 10,
-	RPERIOD_15  = 15,
-	RPERIOD_20  = 20,
-	RPERIOD_25  = 25,
-	RPERIOD_30  = 30,
-	RPERIOD_35  = 35,
-	RPERIOD_40  = 40,
-	RPERIOD_45  = 45,
-	RPERIOD_50  = 50,
-	RPERIOD_55  = 55,
-	RPERIOD_60  = 60,
-} ROAM_PERIOD;
+enum ROAM_PERIOD {
+	RPERIOD_0,
+	RPERIOD_5,
+	RPERIOD_10,
+	RPERIOD_15,
+	RPERIOD_20,
+	RPERIOD_25,
+	RPERIOD_30,
+	RPERIOD_35,
+	RPERIOD_40,
+	RPERIOD_45,
+	RPERIOD_50,
+	RPERIOD_55,
+	RPERIOD_60,
+};
 
-#ifndef _IGNORE_CCX_FEATURES_
-typedef enum _CCX_FEATURES {
-	CCX_OPTIMIZED = 0,
-	CCX_FULL = 1,
-	CCX_OFF = 2,
-} CCX_FEATURES;
-#endif
+enum CCX_FEATURES {
+	CCX_OPTIMIZED,
+	CCX_FULL,
+	CCX_OFF,
+};
 
-typedef enum _WEPLEN {
-	WEPLEN_NOT_SET = 0,
+enum WEPLEN {
+	WEPLEN_NOT_SET,
 	WEPLEN_40BIT,
 	WEPLEN_128BIT,
-} WEPLEN;
+};
 
-typedef enum _FCCTEST {
-	FCCTEST_OFF  = 0,
-	FCCTEST_TX   = 1,
-	FCCTEST_RX   = 3,
-	FCCTEST_FREQ = 2,
-} FCC_TEST;
+enum FCC_TEST {
+	FCCTEST_OFF,
+	FCCTEST_TX,
+	FCCTEST_RX,
+	FCCTEST_FREQ,
+};
 
-typedef enum _CARDSTATE {
-	CARDSTATE_NOT_INSERTED = 0,
+enum CARDSTATE {
+	CARDSTATE_NOT_INSERTED,
 	CARDSTATE_NOT_ASSOCIATED,
 	CARDSTATE_ASSOCIATED,
 	CARDSTATE_AUTHENTICATED,
@@ -303,86 +330,81 @@ typedef enum _CARDSTATE {
 	CARDSTATE_DISABLED,
 	CARDSTATE_ERROR,
 	CARDSTATE_AP_MODE,
-} CARDSTATE;
+};
 
-#define RADIOTYPE_BCM_OFFSET 0x00 //CF,PE,SD10 Radios
-#define RADIOTYPE_AR_OFFSET 0x100 //SD30 Radio
-typedef enum _RADIOTYPE {
-	RADIOTYPE_BG        = 0,
-	RADIOTYPE_ABG       = 1,
-	RADIOTYPE_NBG       = 2,
-	RADIOTYPE_NABG      = 3,
-	RADIOTYPE_AR_BG     = (RADIOTYPE_AR_OFFSET + RADIOTYPE_BG),
-	RADIOTYPE_AR_ABG    = (RADIOTYPE_AR_OFFSET + RADIOTYPE_ABG),
-	RADIOTYPE_AR_NBG    = (RADIOTYPE_AR_OFFSET + RADIOTYPE_NBG),
-	RADIOTYPE_AR_NABG   = (RADIOTYPE_AR_OFFSET + RADIOTYPE_NABG),
-	RADIOTYPE_NOT_SDC   = 0x64,
-	RADIOTYPE_NOT_SDC_1 = 0x65, //reserved
-} RADIOTYPE;
+#define RADIOTYPE_BCM_OFFSET 0x00
+#define RADIOTYPE_AR_OFFSET 0x100
+enum RADIOTYPE {
+	RADIOTYPE_BG,
+	RADIOTYPE_ABG,
+	RADIOTYPE_NBG,
+	RADIOTYPE_NABG,
+	RADIOTYPE_AR_BG,
+	RADIOTYPE_AR_ABG,
+	RADIOTYPE_AR_NBG,
+	RADIOTYPE_AR_NABG,
+	RADIOTYPE_NOT_SDC,
+	RADIOTYPE_NOT_SDC_1,
+};
 
-typedef enum _RADIOCHIPSET {
-	RADIOCHIPSET_NONE     = 0,
-	RADIOCHIPSET_SDC10    = 1, //BCM4318
-	RADIOCHIPSET_SDC15    = 2, //BCM4322,
-	RADIOCHIPSET_SDC30    = 3, //AR6002,
-	RADIOCHIPSET_SDC40L   = 4, //BCM4319,
-	RADIOCHIPSET_SDC40NBT = 5, //BCM4329,
-	RADIOCHIPSET_SDC45    = 6, //AR6003,
-} RADIOCHIPSET;
+enum RADIOCHIPSET {
+	RADIOCHIPSET_NONE,
+	RADIOCHIPSET_SDC10,
+	RADIOCHIPSET_SDC15,
+	RADIOCHIPSET_SDC30,
+	RADIOCHIPSET_SDC40L,
+	RADIOCHIPSET_SDC40NBT,
+	RADIOCHIPSET_SDC45,
+	RADIOCHIPSET_SDC50,
+};
 
+enum CERTLOCATION {
+	CERT_NONE,
+	CERT_FILE,
+	CERT_FULL_STORE,
+	CERT_IN_STORE
+};
 
-typedef enum _CERTLOCATION {
-	CERT_NONE = 0,	// don't validate the server
-	CERT_FILE,		// specify the filename for caCert
-	CERT_FULL_STORE,	// use the entire MS-store
-	CERT_IN_STORE		// use one specific cert from the MS-store, specify the cert's hash
-} CERTLOCATION;
+enum INTERFERENCE {
+	INTER_NONE,
+	INTER_NONWLAN,
+	INTER_WLAN,
+	INTER_AUTO
+};
 
-typedef enum _INTERFERENCE {
-	INTER_NONE = 0,	// OFF
-	INTER_NONWLAN,    // reduces CCA Tx threshold
-	INTER_WLAN,	    // reduces interchannel noise
-	INTER_AUTO		// automatic
-} INTERFERENCE;
-
-typedef enum _TTLS_INNER_METHOD {
-	TTLS_AUTO = 0,	// uses any available EAP method
+typedef enum TTLS_INNER_METHOD {
+	TTLS_AUTO,
 	TTLS_MSCHAPV2,
 	TTLS_MSCHAP,
 	TTLS_PAP,
 	TTLS_CHAP,
 	TTLS_EAP_MSCHAPV2,
-	//TTLS_EAP_MD5,
-	//TTLS_EAP_GTC,
-	//TTLS_EAP_OTP,
-	//TTLS_EAP_TLS
-} TTLS_INNER_METHOD;
+};
 
-typedef enum _DFS_CHANNELS {
-	DFS_OFF = 0,
+typedef enum DFS_CHANNELS {
+	DFS_OFF,
 	DFS_FULL,
 	DFS_OPTIMIZED
-} DFS_CHANNELS;
+};
 
-typedef enum _UAPSD {   //Bitmask enums for UAPSD
-	UAPSD_AC_VO = 1,    //Access Category Voice
-	UAPSD_AC_VI = 2,    //Access Category Video
-	UAPSD_AC_BK = 4,    //Access Category Background
-	UAPSD_AC_BE = 8     //Access Category Best Effort
-} UPASD;
+enum uAPSD {
+	UAPSD_AC_VO,
+	UAPSD_AC_VI,
+	UAPSD_AC_BK,
+	UAPSD_AC_BE,
+};
 
-// or this in the length to set the XMIT key
 #define XMITBIT 0x100
 
 #pragma pack(1)
 
 typedef struct _monitorPacket {
-	unsigned long length; // add this to get to the next packet (this is the last thing set)
-	unsigned long dataOffset; // add this to the frame below to get at the data of the packet
+	unsigned long length;
+	unsigned long dataOffset;
 	struct _monitorPacket *previous;
-	unsigned long packetLength;  //actual packet size (with header)
+	unsigned long packetLength;
 	unsigned long channel;
-	unsigned long speed; // in 500kPs increments (11 Mbs is 22)
+	unsigned long speed;
 	unsigned long RSSI;
 	unsigned long macTime;
 	unsigned long CRCflag;
@@ -390,16 +412,16 @@ typedef struct _monitorPacket {
 } monitorPacket;
 
 typedef struct _monitorHeader {
-	unsigned long bufSize;  //(total, includes this field, minimum 16K)
+	unsigned long bufSize;
 	monitorPacket  *current;
-	unsigned long halted;	 //	give sniffer the ability to 'pause'
+	unsigned long halted;
 	unsigned long numPackets;
-	unsigned long data;    // this is were the monitor packets get stored and wrapped around to
+	unsigned long data;
 } monitorHeader;
 
 typedef struct _WEPKEY {
-	unsigned long  length;  //40 or 128 or 0 for not set
-	unsigned char data[16]; //enough to store 128 bits
+	unsigned long  length;
+	unsigned char data[16];
 } WEPKey;
 
 #define CRYPT_BUFFER_SIZE 120
@@ -434,59 +456,56 @@ typedef struct _SDCGlobalConfig {
 	ROAM_TRIG     roamTrigger;
 	ROAM_DELTA    roamDelta;
 	ROAM_PERIOD   roamPeriod;
-	PREAMBLE      preamble;	//not used
-	GSHORTSLOT    g_shortslot;//not used
+	PREAMBLE      preamble;
+	GSHORTSLOT    g_shortslot;
 	BT_COEXIST    BTcoexist;
 	PING_PAYLOAD  pingPayload;
-	unsigned long pingTimeout;   //in ms
-	unsigned long pingDelay;     //in ms
-	unsigned long radioState;  // enabled-1, disabled-0
-	unsigned long displayPasswords;  //0 no, 1 yes
+	unsigned long pingTimeout;
+	unsigned long pingDelay;
+	unsigned long radioState;
+	unsigned long displayPasswords;
 	unsigned long adminOverride;
-	unsigned long txMax;	  // BG radio - to account for high gain antennae--(max power out desired/19dbm) * 100
-	FCC_TEST      FCCtest;      // 0 - off, 1 tx 2 frequency 3 rx
-	unsigned long testChannel;  // 1-14
-	BITRATE       testRate;	  //
-	TXPOWER       testPower;	  //	0-100 %
-	unsigned long regDomain;	  // status purposes only
-	unsigned long ledUsed;      //for minimodule GPIO 0, need resistor off board to make it work
-	unsigned long txTestTimeout;//in seconds--60000 (decimal) means no timeout--
-	unsigned long WMEenabled;   //enable 1
-	unsigned long CCXfeatures;  // enable 1 or CCX RM and AP control of TX power
-	char          certPath[MAX_CERT_PATH]; // to change the path of the certificate store
+	unsigned long txMax;
+	FCC_TEST      FCCtest;
+	unsigned long testChannel;
+	BITRATE       testRate;
+	TXPOWER       testPower;
+	unsigned long regDomain;
+	unsigned long ledUsed;
+	unsigned long txTestTimeout;
+	unsigned long WMEenabled;
+	unsigned long CCXfeatures;
+	char          certPath[MAX_CERT_PATH];
 	CRYPT         adminPassword;
-	unsigned long bLRS;         // bit 0 = chan 1, bit 1 =chan 2, etc.
-	unsigned long avgWindow;    // 2-8 (rssi moving average window)
-	unsigned long probeDelay;   // 2-120 (delay before sending out probes when AP's aren't located--not config for WZC)
-	unsigned long polledIRQ;    // for units that can't share IRQs nicely
-	unsigned long keepAlive;	  // in cam mode how often a null packet gets sent in seconds (0 means never, 9 by default)
-	unsigned long trayIcon;     // enable 1
-	unsigned long aggScanTimer; // enable 1
-	unsigned long authTimeout;  // in seconds, for EAP credentials, default is 8 ms
-	unsigned long autoProfile;  // not implemented
-	unsigned long PMKcaching;   //0 standard, 1 opportunistic key caching enabled
-	unsigned long defAdhocChannel; // when no beacons found this channel is used
-	unsigned long silentRunning;	 //	enables silent running mode (no active scans unless connected)
-	unsigned long scanDFSTime;	//20-500 ms, default of 120 ms. Maximum time spent scanning each DFS channel during a scan.
+	unsigned long bLRS;
+	unsigned long avgWindow;
+	unsigned long probeDelay;
+	unsigned long polledIRQ;
+	unsigned long keepAlive;
+	unsigned long trayIcon;
+	unsigned long aggScanTimer;
+	unsigned long authTimeout;
+	unsigned long autoProfile;
+	unsigned long PMKcaching;
+	unsigned long defAdhocChannel;
+	unsigned long silentRunning;
+	unsigned long scanDFSTime;
 	unsigned long suppInfo;
-#define SUPPINFO_FIPS (1U<<0)                     //bit 0 is Summit FIPS enable
-                                                  //bit 1 is reserved
-#define SUPPINFO_TLS_TIME_CHECK (1U<<2)           //bit 2 is CA cert date-check
-#define SUPPINFO_WPA1_ORIGINAL_OPERATION (1U<< 3) //bit 3 is pre 2014 WPA1 operation
-	unsigned long uAPSD;          // UAPSD bitmasks
-	unsigned long txMaxA;	      // A radio - to account for high gain antennae-- %
-	unsigned long adminFiles;   // allows import/export of settings to file
-	unsigned long DFSchannels;  //enable 1, optimized 2
-	unsigned long interferenceMode;  //0 off, 1 nonWLAN, 2 WLAN, 3 auto
-	unsigned long authServerType; //0 ACS (type 1), 1 SBR (type 2)
-	unsigned long TTLSInnerMethod;//0 auto-EAP
-	unsigned long aLRS; //bit 0 = chan 36, bit 1 =chan 40, etc
-	unsigned short roamPeriodms; //Roam scan period in milliseconds, valid range 10 - 60000
-	unsigned short BeaconMissTimeout; // 45 and later radios only.  1000-5000 TUs
-	unsigned long Reserved; // future expansion of the global config......
+#define SUPPINFO_FIPS (1U<<0)
+#define SUPPINFO_TLS_TIME_CHECK (1U<<2)
+#define SUPPINFO_WPA1_ORIGINAL_OPERATION (1U<< 3)
+	unsigned long uAPSD;
+	unsigned long txMaxA;
+	unsigned long adminFiles;
+	unsigned long DFSchannels;
+	unsigned long interferenceMode;
+	unsigned long authServerType;
+	unsigned long TTLSInnerMethod;
+	unsigned long aLRS;
+	unsigned short roamPeriodms;
+	unsigned short BeaconMissTimeout;
+	unsigned long Reserved;
 } SDCGlobalConfig;
-
-
 
 typedef struct _SDC3rdPartyConfig {
 	char        clientName[CLIENT_NAME_SZ];
@@ -499,11 +518,11 @@ typedef struct _SDC3rdPartyConfig {
 typedef struct _CF10G_STATUS {
 	CARDSTATE     cardState;
 	char          configName[CONFIG_NAME_SZ];
-	unsigned char client_MAC[6];
-	unsigned char client_IP[4];
+	unsigned char client_MAC[MAC_ADDR_SZ];
+	unsigned char client_IP[IPv4_ADDR_SZ];
 	char          clientName[CLIENT_NAME_SZ];
-	unsigned char AP_MAC[6];
-	unsigned char AP_IP[4];
+	unsigned char AP_MAC[MAC_ADDR_SZ];
+	unsigned char AP_IP[IPv4_ADDR_SZ];
 	char          APName[CLIENT_NAME_SZ];
 	EAPTYPE       eapType;
 	unsigned long channel;
@@ -517,17 +536,18 @@ typedef struct _CF10G_STATUS {
 	unsigned long beaconsReceived;
 } CF10G_STATUS;
 
+typedef unsigned char LRD_WF_ipv6names[INET6_ADDRSTRLEN];
 typedef CF10G_STATUS SDC_STATUS, *PSDC_STATUS;
 
 typedef struct _CONFIG_FILE_INFO {
-	unsigned long   numConfigs; //no more than MAX_CFGS
+	unsigned long   numConfigs;
 	unsigned char   globalConfigPresent;
 	unsigned char   thirdPartyConfigPresent;
 	unsigned long   sdkVersion;
 } CONFIG_FILE_INFO;
 
 typedef struct _SDC_ALL {
-	unsigned long		numConfigs; //no more than MAX_CFGS
+	unsigned long		numConfigs;
 	SDCConfig			*configs;
 	SDC3rdPartyConfig	*configThirdParty;
 	SDCGlobalConfig		*configGlobal;
@@ -539,14 +559,13 @@ typedef struct _lrs_channels {
 
 #pragma pack()
 
-/* see lrd_sdk_pil.h for details */
 typedef struct _pil_info {
 	uint32_t api_version;
 	char * company_name;
-	char * version_string;  //optional
-	char * serial_number;  // optional
-	char * product_id;   // optional
-	void * data;  // optional - customer use
+	char * version_string;
+	char * serial_number;
+	char * product_id;
+	void * data;
 } LRD_WF_PilInfo;
 
 typedef struct _DHCP_LEASE {
@@ -564,149 +583,234 @@ typedef struct _DHCP_LEASE {
 	char expire[30];
 } DHCP_LEASE;
 
-#if 0
-	SDCERR GetCurrentConfig(unsigned long *num, char *name);
-	SDCERR ModifyConfig(char *name, SDCConfig *cfg);
-	SDCERR GetConfig(char *name, SDCConfig *cfg);
-	SDCERR DeleteConfig(char *name);
-	SDCERR SetDefaultConfigValues(SDCConfig *cfg);
-	SDCERR CreateConfig(SDCConfig *cfg);
-	SDCERR GetNumConfigs(unsigned long *num);
-	SDCERR ActivateConfig(char *name);
-	SDCERR AddConfig(SDCConfig *cfg);
-	SDCERR GetAllConfigs(SDCConfig *cfgs, unsigned long *num);
-	SDCERR SetAllConfigs(unsigned long num, SDCConfig *cfgs);
-	SDCERR LRD_WF_GetbLRSBitmask(unsigned long numChannels, LRD_WF_LRSChannels channels, unsigned long *bitmask);
-	SDCERR LRD_WF_GetaLRSBitmask(unsigned long numChannels, LRD_WF_LRSChannels channels, unsigned long *bitmask);
-	SDCERR LRD_WF_GetbLRSChannels(unsigned long *numChannels, LRD_WF_LRSChannels *channels, unsigned long bitmask);
-	SDCERR LRD_WF_GetaLRSChannels(unsigned long *numChannels, LRD_WF_LRSChannels *channels, unsigned long bitmask);
-	SDCERR GetGlobalSettings(SDCGlobalConfig *gcfg);
-	SDCERR SetGlobalSettings(SDCGlobalConfig *gcfg);
-#endif
+SDCERR GetCurrentConfig(unsigned long *num, char *name);
+
+SDCERR ModifyConfig(char *name, SDCConfig *cfg);
+
+SDCERR GetConfig(char *name, SDCConfig *cfg);
+
+SDCERR DeleteConfig(char *name);
+
+SDCERR SetDefaultConfigValues(SDCConfig *cfg);
+
+SDCERR ClearDefaultConfigValues();
+
+SDCERR CreateConfig(SDCConfig *cfg);
+
+SDCERR GetNumConfigs(unsigned long *num);
+
+SDCERR ActivateConfig(char *name);
+
+SDCERR AddConfig(SDCConfig *cfg);
+
+SDCERR GetAllConfigs(SDCConfig *cfgs, unsigned long *num);
+
+SDCERR SetAllConfigs(unsigned long num, SDCConfig *cfgs);
+
+SDCERR LRD_WF_GetbLRSBitmask(unsigned long numChannels, LRD_WF_LRSChannels channels, unsigned long *bitmask);
+
+SDCERR LRD_WF_GetaLRSBitmask(unsigned long numChannels, LRD_WF_LRSChannels channels, unsigned long *bitmask);
+
+SDCERR LRD_WF_GetbLRSChannels(unsigned long *numChannels, LRD_WF_LRSChannels *channels, unsigned long bitmask);
+
+SDCERR LRD_WF_GetaLRSChannels(unsigned long *numChannels, LRD_WF_LRSChannels *channels, unsigned long bitmask);
+
+SDCERR GetGlobalSettings(SDCGlobalConfig *gcfg);
+
+SDCERR SetGlobalSettings(SDCGlobalConfig *gcfg);
+
+SDCERR Get3rdPartyConfig(SDC3rdPartyConfig *cfg3rd);
+
+SDCERR Set3rdPartyConfig(SDC3rdPartyConfig *cfg3rd);
 
 SDCERR GetCurrentStatus(CF10G_STATUS *status);
+
 SDCERR GetWifiInterfaceName(char *ifname);
 
-#if 0
-	SDCERR RadioDisable();
-	SDCERR RadioEnable();
-	SDCERR FirstFCCTest(FCC_TEST test, BITRATE rate, int channel,
-						TXPOWER testPower, unsigned long timeout);
-	SDCERR NextFCCTest(FCC_TEST test, BITRATE rate, int channel,
-					   TXPOWER testPower, unsigned long timeout);
-	REG_DOMAIN GetCurrentDomain();
-	SDCERR updateSROM();
-	SDCERR testTxData(unsigned char start, char pattern);
-	SDCERR setMonitorMode(unsigned long enable, unsigned long channel, unsigned long slice, void *buffer, unsigned long bufferSize);
-#endif
+SDCERR RadioDisable();
+
+SDCERR RadioEnable();
+
+SDCERR FirstFCCTest(FCC_TEST test, BITRATE rate, int channel,
+					TXPOWER testPower, unsigned long timeout);
+
+SDCERR NextFCCTest(FCC_TEST test, BITRATE rate, int channel,
+				   TXPOWER testPower, unsigned long timeout);
+
+REG_DOMAIN GetCurrentDomain();
+
+SDCERR updateSROM();
+
+SDCERR testTxData(unsigned char start, char pattern);
+
+SDCERR setMonitorMode(unsigned long enable, unsigned long channel, unsigned long slice, void *buffer, unsigned long bufferSize);
 
 SDCERR GetSDKVersion(unsigned long *version);
 
-#if 0
-	SDCERR FlushConfigKeys(int configNumber);
-	SDCERR FlushAllConfigKeys();
+SDCERR FlushConfigKeys(int configNumber);
 
-	SDCERR GetConfigFileInfo(char *filename, CONFIG_FILE_INFO *info);
-	SDCERR exportSettings(char *filename, SDC_ALL *all);
-	SDCERR importSettings(char *filename, SDC_ALL *all);
+SDCERR FlushAllConfigKeys();
 
-	SDCERR SetWEPKey(SDCConfig* cfg, int nWepKey,  WEPLEN keyLength, unsigned char* key, unsigned char txKey);
-	SDCERR GetWEPKey(SDCConfig* cfg, int nWepKey,  WEPLEN* keyLength, unsigned char* key, unsigned char* txKey);
-	SDCERR SetMultipleWEPKeys(SDCConfig *cfg,  int nTxKey,  WEPLEN key1Length, unsigned char * key1,
-							  WEPLEN key2Length, unsigned char * key2,
-							  WEPLEN key3Length, unsigned char * key3,
-							  WEPLEN key4Length, unsigned char * key4);
-	SDCERR GetMultipleWEPKeys(SDCConfig *cfg,  int *nTxKey, WEPLEN *key1Length, unsigned char * key1,
-							  WEPLEN *key2Length, unsigned char * key2,
-							  WEPLEN *key3Length, unsigned char * key3,
-							  WEPLEN *key4Length, unsigned char * key4);
-	SDCERR SetPSK(SDCConfig * cfg,  char * psk);
-	SDCERR GetPSK(SDCConfig * cfg,  char * psk);
-	SDCERR SetLEAPCred(SDCConfig * cfg,  char * username, char * password);
-	SDCERR GetLEAPCred(SDCConfig * cfg,  char * username, char * password);
-	SDCERR SetEAPFASTCred(SDCConfig * cfg,  char * username, char * password, char* pacfilename, char* pacpassword);
-	SDCERR GetEAPFASTCred(SDCConfig * cfg,  char * username, char * password, char* pacfilename, char* pacpassword);
-	SDCERR SetPEAPGTCCred(SDCConfig* cfg,  char* username, char* password, CERTLOCATION CAcertLocation, char* caCert );
-	SDCERR GetPEAPGTCCred(SDCConfig* cfg,  char* username, char * password, CERTLOCATION* CAcertLocation, char* caCert );
-	SDCERR SetPEAPMSCHAPCred(SDCConfig* cfg,  char* username, char* password, CERTLOCATION CAcertLocation, char* caCert );
-	SDCERR GetPEAPMSCHAPCred(SDCConfig* cfg,  char* username, char * password, CERTLOCATION* CAcertLocation, char* caCert );
-	SDCERR SetEAPTLSCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION certLocation, char* caCert);
-	SDCERR GetEAPTLSCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION* certLocation, char* caCert);
-	SDCERR SetEAPTTLSCred(SDCConfig * cfg,  char * username, char* password, CERTLOCATION certLocation, char* caCert);
-	SDCERR GetEAPTTLSCred(SDCConfig * cfg,  char * username, char* password, CERTLOCATION* certLocation, char* caCert);
-	SDCERR SetPEAPTLSCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION certLocation, char* caCert);
-	SDCERR GetPEAPTLSCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION* certLocation, char* caCert);
+SDCERR GetConfigFileInfo(char *filename, CONFIG_FILE_INFO *info);
 
-	typedef struct _scanItemInfo {
-		   char            ssid[40];
-		   char            bssid[20];
-		   int             freq;
-		   int             channel;
-		   int             rssi;
-		   int             security;  // 0 open, 1 not open
-		   EAPTYPE         eapType;   // not yet supported
-		   WEPTYPE         wepType;
-		   int             adHocMode; //1 enable, default 0
-	} SCAN_ITEM_INFO;
+SDCERR exportSettings(char *filename, SDC_ALL *all);
 
-	typedef struct _SDC_802_11_BSSID_LIST_EX {
-		unsigned long  NumberOfItems;
-		SCAN_ITEM_INFO Bssid[1];
-	} SDC_802_11_BSSID_LIST_EX;
+SDCERR importSettings(char *filename, SDC_ALL *all);
 
-	SDCERR GetBSSIDList(SDC_802_11_BSSID_LIST_EX *list, int *numBufEntries);
+SDCERR SetWEPKey(SDCConfig* cfg, int nWepKey,  WEPLEN keyLength, unsigned char* key, unsigned char txKey);
 
-	typedef enum _LRD_WF_BSSTYPE {
-		INFRASTRUCTURE = 0,
-		ADHOC
-	} LRD_WF_BSSTYPE;
+SDCERR GetWEPKey(SDCConfig* cfg, int nWepKey,  WEPLEN* keyLength, unsigned char* key, unsigned char* txKey);
 
-	#define LRD_WF_MAX_SSID_LEN    32
-	#define LRD_WF_MAC_ADDR_LEN    6
+SDCERR SetMultipleWEPKeys(SDCConfig *cfg,  int nTxKey,  WEPLEN key1Length, unsigned char * key1,
+						  WEPLEN key2Length, unsigned char * key2,
+						  WEPLEN key3Length, unsigned char * key3,
+						  WEPLEN key4Length, unsigned char * key4);
 
-	typedef struct _LRD_WF_SSID{
-		unsigned char len;
-		unsigned char val[LRD_WF_MAX_SSID_LEN];
-										  // Note that the val is not a string
-										  // and can have embedded NULL and non-
-										  // printable characters.  Also note
-										  // that val does not have a null
-										  // termination character.
-	} LRD_WF_SSID;
+SDCERR GetMultipleWEPKeys(SDCConfig *cfg,  int *nTxKey, WEPLEN *key1Length, unsigned char * key1,
+						  WEPLEN *key2Length, unsigned char * key2,
+						  WEPLEN *key3Length, unsigned char * key3,
+						  WEPLEN *key4Length, unsigned char * key4);
 
-	typedef struct _LRD_WF_SCAN_INFO_ITEM{
-		int             channel;
-		int             rssi;
-		unsigned int    securityMask; // bit mask of WEPTYPE enums indicating
-									  // supported types
-		LRD_WF_BSSTYPE  bssType;
-		unsigned int    reserved;
-		unsigned char   bssidMac[LRD_WF_MAC_ADDR_LEN];
-		LRD_WF_SSID     ssid;
-	} LRD_WF_SCAN_ITEM_INFO ;
+SDCERR SetPSK(SDCConfig * cfg,  char * psk);
 
-	typedef struct _LRD_WF_BSSID_LIST{
-		unsigned long  NumberOfItems;
-		LRD_WF_SCAN_ITEM_INFO Bssid[1];
-	} LRD_WF_BSSID_LIST;
+SDCERR GetPSK(SDCConfig * cfg,  char * psk);
 
-	SDCERR LRD_WF_GetBSSIDList(LRD_WF_BSSID_LIST *list, int *numBufEntries);
-	SDCERR LRD_WF_GetSSID(LRD_WF_SSID *ssid);
+SDCERR SetLEAPCred(SDCConfig * cfg,  char * username, char * password);
 
-	typedef SDCERR (*SDC_EVENT_HANDLER) (unsigned long event_type, SDC_EVENT *event);
-	SDCERR SDCRegisterForEvents( unsigned long long eventMask, SDC_EVENT_HANDLER ehandler);
-	SDCERR SDCRegisteredEventsList( unsigned long long *currentMask);
-	SDCERR SDCDeregisterEvents();
+SDCERR GetLEAPCred(SDCConfig * cfg,  char * username, char * password);
 
-	SDCERR Validate_WEP_EAP_Combo(WEPTYPE wt, EAPTYPE et);
-	SDCERR SetUserCertPassword(SDCConfig * cfg,  char * userPswd );
-	SDCERR GetUserCertPassword(SDCConfig * cfg,  char * userPswd );
-	SDCERR GetWAPICertCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION* certLocation, char* caCert);
-	SDCERR SetWAPICertCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION caCertLocation, char* caCert);
+SDCERR SetEAPFASTCred(SDCConfig * cfg,  char * username, char * password, char* pacfilename, char* pacpassword);
 
+SDCERR GetEAPFASTCred(SDCConfig * cfg,  char * username, char * password, char* pacfilename, char* pacpassword);
 
-	SDCERR LRD_WF_GetPilInfo(LRD_WF_PilInfo *pil_info);
-	SDCERR LRD_WF_GetDHCPLease(DHCP_LEASE *dhcpLease);
-	SDCERR LRD_WF_GetFipsStatus(char * current, char * nextStart);
+SDCERR SetPEAPGTCCred(SDCConfig* cfg,  char* username, char* password, CERTLOCATION CAcertLocation, char* caCert );
 
-#endif
+SDCERR GetPEAPGTCCred(SDCConfig* cfg,  char* username, char * password, CERTLOCATION* CAcertLocation, char* caCert );
+
+SDCERR SetPEAPMSCHAPCred(SDCConfig* cfg,  char* username, char* password, CERTLOCATION CAcertLocation, char* caCert );
+
+SDCERR GetPEAPMSCHAPCred(SDCConfig* cfg,  char* username, char * password, CERTLOCATION* CAcertLocation, char* caCert );
+
+SDCERR SetEAPTLSCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION certLocation, char* caCert);
+
+SDCERR GetEAPTLSCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION* certLocation, char* caCert);
+
+SDCERR SetEAPTTLSCred(SDCConfig * cfg,  char * username, char* password, CERTLOCATION certLocation, char* caCert);
+
+SDCERR GetEAPTTLSCred(SDCConfig * cfg,  char * username, char* password, CERTLOCATION* certLocation, char* caCert);
+
+SDCERR SetPEAPTLSCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION certLocation, char* caCert);
+
+SDCERR GetPEAPTLSCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION* certLocation, char* caCert);
+
+typedef struct _scanItemInfo {
+       char            ssid[40];
+       char            bssid[20];
+       int             freq;
+       int             channel;
+       int             rssi;
+       int             security;
+       EAPTYPE         eapType;
+       WEPTYPE         wepType;
+       int             adHocMode;
+} SCAN_ITEM_INFO;
+
+typedef struct _SDC_802_11_BSSID_LIST_EX {
+	unsigned long  NumberOfItems;
+	SCAN_ITEM_INFO Bssid[1];
+} SDC_802_11_BSSID_LIST_EX;
+
+SDCERR GetBSSIDList(SDC_802_11_BSSID_LIST_EX *list, int *numBufEntries);
+
+typedef enum _LRD_WF_BSSTYPE {
+    INFRASTRUCTURE = 0,
+    ADHOC
+} LRD_WF_BSSTYPE;
+
+#define LRD_WF_MAX_SSID_LEN    32
+#define LRD_WF_MAC_ADDR_LEN    6
+
+typedef struct _LRD_WF_SSID{
+	unsigned char len;
+	unsigned char val[LRD_WF_MAX_SSID_LEN];
+} LRD_WF_SSID;
+
+typedef struct _LRD_WF_SCAN_INFO_ITEM{
+	int             channel;
+	int             rssi;
+	unsigned int    securityMask;
+	LRD_WF_BSSTYPE  bssType;
+	unsigned int    reserved;
+	unsigned char   bssidMac[LRD_WF_MAC_ADDR_LEN];
+	LRD_WF_SSID     ssid;
+} LRD_WF_SCAN_ITEM_INFO ;
+
+typedef struct _LRD_WF_BSSID_LIST{
+	unsigned long  NumberOfItems;
+	LRD_WF_SCAN_ITEM_INFO Bssid[1];
+} LRD_WF_BSSID_LIST;
+
+SDCERR LRD_WF_GetBSSIDList(LRD_WF_BSSID_LIST *list, int *numBufEntries);
+
+SDCERR LRD_WF_GetSSID(LRD_WF_SSID *ssid);
+
+typedef SDCERR (*SDC_EVENT_HANDLER) (unsigned long event_type, SDC_EVENT *event);
+
+SDCERR SDCRegisterForEvents( unsigned long long eventMask, SDC_EVENT_HANDLER ehandler);
+
+SDCERR SDCRegisteredEventsList( unsigned long long *currentMask);
+
+SDCERR SDCDeregisterEvents();
+
+SDCERR Validate_WEP_EAP_Combo(WEPTYPE wt, EAPTYPE et);
+
+SDCERR SetUserCertPassword(SDCConfig * cfg,  char * userPswd );
+
+SDCERR GetUserCertPassword(SDCConfig * cfg,  char * userPswd );
+
+SDCERR SetWAPICertCred(SDCConfig * cfg,  char * username, char* userCert, CERTLOCATION caCertLocation, char* caCert);
+
+SDCERR LRD_WF_GetRadioChipSet(RADIOCHIPSET *radioChipSet );
+
+SDCERR LRD_WF_GetPilInfo(LRD_WF_PilInfo *pil_info);
+
+SDCERR LRD_WF_GetDHCPLease(DHCP_LEASE *dhcpLease);
+
+SDCERR LRD_WF_GetFipsStatus(char * current, char * nextStart);
+
+enum WF_SUPP_LOGLEVEL {
+	WF_SUPP_DBG_NONE,
+	WF_SUPP_DBG_ERROR,
+	WF_SUPP_DBG_WARNING,
+	WF_SUPP_DBG_INFO,
+	WF_SUPP_DBG_DEBUG,
+	WF_SUPP_DBG_MSGDUMP,
+	WF_SUPP_DBG_EXCESSIVE
+};
+
+SDCERR LRD_WF_SuppLogLevel(WF_SUPP_LOGLEVEL level);
+
+SDCERR LRD_WF_GetSuppLogLevel(WF_SUPP_LOGLEVEL *level);
+
+SDCERR LRD_WF_SuppReconfigure(void);
+
+SDCERR LRD_WF_SuppDisconnect(void);
+
+SDCERR LRD_WF_HostAPDRestart();
+
+SDCERR LRD_WF_GetSupportedGlobals(RADIOCHIPSET rcs, SDCGlobalConfig *cfg);
+
+#define securityField_username    (1<<0)
+#define securityField_password    (1<<1)
+#define securityField_usercert    (1<<2)
+#define securityField_usercertpw  (1<<3)
+#define securityField_psk         (1<<4)
+#define securityField_wepkeys     (1<<5)
+
+SDCERR LRD_WF_ClearCredentialFields(SDCConfig *cfg, uint16_t credBitMask);
+
+SDCERR LRD_WF_ModifyHostAPDConf( const char * key, const char *value );
+
+SDCERR LRD_WF_HostAPDConfGetKeyValue( const char * key, char *value, int len );
+
+SDCERR LRD_WF_GetIpV6Address(LRD_WF_ipv6names ipv6names[], size_t *arr_size);
