@@ -17,15 +17,15 @@
 /* Please reference sdc_sdk.h for function definition and usage. */
 
 %module lrd_php_sdk
-%include <carrays.i>
-%include "cpointer.i"
-%include "phppointers.i"
-%pointer_functions( unsigned long, ulongp )
-%pointer_functions( int, intp )
-%array_functions( unsigned char, uchar_array )
 %{
 	#include "sdc_sdk.h"
 %}
+%include <carrays.i>
+%include "cpointer.i"
+%include "phppointers.i"
+%include "cmalloc.i"
+%pointer_functions( unsigned long, ulongp )
+%pointer_functions( int, intp )
 %pointer_functions( FCC_TEST, FCC_TESTp )
 %pointer_functions( BITRATE, BITRATEp )
 %pointer_functions( TXPOWER, TXPOWERp )
@@ -33,6 +33,10 @@
 %pointer_functions( CERTLOCATION, CERTLOCATIONp )
 %pointer_functions( RADIOCHIPSET, RADIOCHIPSETp )
 %pointer_functions( WF_SUPP_LOGLEVEL, WF_SUPP_LOGLEVELp )
+%array_functions( unsigned char, uchar_array )
+%array_functions( SDCConfig, SDCConfig_array )
+%nodefaultdtor _SDCConfig;
+%free( SDCConfig );
 
 #define LRD_PHP_SDK_VERSION_MAJOR 3
 #define LRD_PHP_SDK_VERSION_MINOR 5
