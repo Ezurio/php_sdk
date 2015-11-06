@@ -27,6 +27,7 @@ FIND_REV = $(shell sed -n '/LRD_PHP_SDK_VERSION_MAJOR/s/.* //p' php_sdk.i). \
 		$(shell sed -n '/LRD_PHP_SDK_VERSION_MINOR/s/.* //p' php_sdk.i). \
 		$(shell sed -n '/LRD_PHP_SDK_VERSION_REVISION/s/.* //p' php_sdk.i)
 PHP_SDK_REV = $(subst . ,.,$(FIND_REV))
+UNITS = $(shell ls unit/)
 
 ifdef HOST_DIR
 BUILD_PATH = $(HOST_DIR)/usr/bin/
@@ -45,7 +46,7 @@ install-php_sdk:
 	cd `php-config --extension-dir` && ln -s $(LIB).so.$(PHP_SDK_REV) $(LIB).so
 
 test-php_sdk: $(LIB)
-	cd unit/ && phpunit unit_sdk_GetVersion.php
+	cd unit/ && $(foreach unit,$(UNITS),phpunit $(unit);)
 
 clean:
 	-rm -f *.h *.o *.so* *_wrap.c
