@@ -7,15 +7,16 @@ if(!extension_loaded('lrd_php_sdk')){
 
 $SDKVersion = new_ulongp();
 $result = GetSDKVersion($SDKVersion);
-$SDKVersion = ulongp_value($SDKVersion);
+$SDKVersionValue = ulongp_value($SDKVersion);
 if($result == SDCERR_SUCCESS){
 	print "SDK: ";
-	print (($SDKVersion & 0xff000000) >> 24);
-	print "." . (($SDKVersion & 0xff0000) >> 16);
-	print "." . (($SDKVersion & 0xff00) >> 8);
-	print "." . ($SDKVersion & 0xff);
+	print (($SDKVersionValue & 0xff000000) >> 24);
+	print "." . (($SDKVersionValue & 0xff0000) >> 16);
+	print "." . (($SDKVersionValue & 0xff00) >> 8);
+	print "." . ($SDKVersionValue & 0xff);
 	print "\n";
 }
+delete_ulongp($SDKVersion);
 
 print "PHP_SDK version: " . LRD_PHP_SDK_VERSION_MAJOR . "." . LRD_PHP_SDK_VERSION_MINOR . "." . LRD_PHP_SDK_VERSION_REVISION . "." . LRD_PHP_VERSION_SUB_REVISION . "\n";
 
@@ -50,6 +51,8 @@ if($result == SDCERR_SUCCESS){
 	}
 	print "\n";
 }
+delete_RADIOCHIPSETp($rcs);
+
 $status = new CF10G_STATUS();
 $result = GetCurrentStatus($status);
 if($result == SDCERR_SUCCESS){

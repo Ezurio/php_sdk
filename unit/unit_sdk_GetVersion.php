@@ -14,12 +14,14 @@ class StackTest extends PHPUnit_Framework_TestCase
 	{
 		$SDKVersion = new_ulongp();
 		$this->assertEquals(SDCERR_SUCCESS, GetSDKVersion($SDKVersion));
+		delete_ulongp($SDKVersion);
 	}
 
 	public function testGetRadioChipSet()
 	{
 		$rcs = new_RADIOCHIPSETp();
 		$this->assertEquals(SDCERR_SUCCESS, LRD_WF_GetRadioChipSet($rcs));
+		delete_RADIOCHIPSETp($rcs);
 	}
 
 	public function testGetCurrentStatus()
