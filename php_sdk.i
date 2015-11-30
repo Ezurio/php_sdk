@@ -34,6 +34,7 @@
 %pointer_functions( RADIOCHIPSET, RADIOCHIPSETp )
 %pointer_functions( WF_SUPP_LOGLEVEL, WF_SUPP_LOGLEVELp )
 %array_functions( unsigned char, uchar_array )
+%array_functions( unsigned long, ulong_array )
 %array_functions( SDCConfig, SDCConfig_array )
 %nodefaultdtor _SDCConfig;
 %free( SDCConfig );
