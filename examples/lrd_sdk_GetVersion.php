@@ -81,8 +81,11 @@ if($result == SDCERR_SUCCESS){
 	print $SDCSupp;
 }
 
-if(file_exists('/etc/summit-release')){
-	$BuildString = file_get_contents('/etc/summit-release');
+if(file_exists('/etc/laird-release') | file_exists('/etc/summit-release')){
+	$BuildString = file_get_contents('/etc/laird-release');
+	if($BuildString == false){
+		$BuildString = file_get_contents('/etc/summit-release');
+	}
 	if($BuildString != false){
 		print $BuildString;
 	}
