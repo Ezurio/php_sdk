@@ -90,6 +90,24 @@
 #define USER_CERT_PW_SZ 64
 #define LRS_MAX_CHAN	  32
 
+#define LRD_ENI_ERROR_SUCCESS			0
+#define LRD_ENI_ERROR_FAIL				1
+#define LRD_ENI_PROPERTY_AUTO			"auto"
+#define LRD_ENI_PROPERTY_DHCP			"dhcp"
+#define LRD_ENI_PROPERTY_ADDRESS		"address"
+#define LRD_ENI_PROPERTY_NETMASK		"netmask"
+#define LRD_ENI_PROPERTY_GATEWAY		"gateway"
+#define LRD_ENI_PROPERTY_BROADCAST		"broadcast"
+#define LRD_ENI_PROPERTY_NAMESERVER		"nameserver"
+#define LRD_ENI_PROPERTY_STATIC			"static"
+#define LRD_ENI_PROPERTY_MANUAL			"manual"
+#define LRD_ENI_PROPERTY_BRIDGEPORTS	"bridge_ports"
+#define LRD_ENI_PROPERTY_STATE			"state"
+#define LRD_ENI_PROPERTY_METHOD			"method"
+#define LRD_ENI_PROPERTY_HOSTAPD		"hostapd"
+#define LRD_ENI_PROPERTY_POSTUDHCPD		"post-cfg-do /etc/dhcp/udhcpd.sh"
+#define LRD_ENI_PROPERTY_PREUDHCPD		"pre-dcfg-do /etc/dhcp/udhcpd.sh"
+
 enum SDCERR {
 	SDCERR_SUCCESS,
 	SDCERR_FAIL,
@@ -819,3 +837,35 @@ SDCERR LRD_WF_ModifyHostAPDConf( const char * key, const char *value );
 SDCERR LRD_WF_HostAPDConfGetKeyValue( const char * key, char *value, int len );
 
 SDCERR LRD_WF_GetIpV6Address(LRD_WF_ipv6names ipv6names[], size_t *arr_size);
+
+SDCERR LRD_ENI_SetMethod(char * interfaceName,char * method);
+
+SDCERR LRD_ENI_AutoStartOn(char *interfaceName);
+
+SDCERR LRD_ENI_AutoStartOff(char *interfaceName);
+
+SDCERR LRD_ENI_SetAddress(char *interfaceName, char *address);
+
+SDCERR LRD_ENI_SetNetmask(char *interfaceName, char *address);
+
+SDCERR LRD_ENI_SetGateway(char *interfaceName, char *address);
+
+SDCERR LRD_ENI_SetNameserver(char *interfaceName, char *address);
+
+SDCERR LRD_ENI_SetBroadcastAddress(char * interfaceName, char * address);
+
+SDCERR LRD_ENI_EnableInterface(char *interfaceName);
+
+SDCERR LRD_ENI_DisableInterface(char *interfaceName);
+
+SDCERR LRD_ENI_SetBridgePorts(char *interfaceName, char *ports);
+
+SDCERR LRD_ENI_AddInterface(char *interfaceName);
+
+SDCERR LRD_ENI_RemoveInterface(char *interfaceName);
+
+SDCERR LRD_ENI_Init();
+
+SDCERR LRD_ENI_EnableHostAPD(char * interfaceName);
+
+SDCERR LRD_ENI_DisableHostAPD(char * interfaceName);
