@@ -33,6 +33,7 @@
 %pointer_functions( CERTLOCATION, CERTLOCATIONp )
 %pointer_functions( RADIOCHIPSET, RADIOCHIPSETp )
 %pointer_functions( WF_SUPP_LOGLEVEL, WF_SUPP_LOGLEVELp )
+%pointer_functions( LRD_WF_DRV_DEBUG, LRD_WF_DRV_DEBUGp )
 %array_functions( unsigned char, uchar_array )
 %array_functions( unsigned long, ulong_array )
 %array_functions( SDCConfig, SDCConfig_array )
@@ -815,6 +816,16 @@ SDCERR LRD_WF_SuppLogLevel(WF_SUPP_LOGLEVEL level);
 
 SDCERR LRD_WF_GetSuppLogLevel(WF_SUPP_LOGLEVEL *level);
 
+typedef enum _LRD_WF_DRV_DEBUG {
+	LRD_WF_DRV_DEBUG_NONE,
+	LRD_WF_DRV_DEBUG_LOW,
+	LRD_WF_DRV_DEBUG_MED,
+	LRD_WF_DRV_DEBUG_HIGH,
+	LRD_WF_DRV_DEBUG_RADIO_SPECIFIC
+} LRD_WF_DRV_DEBUG;
+
+SDCERR LRD_WF_Driver_get_debug(LRD_WF_DRV_DEBUG *level, int *dbgmask);
+
 SDCERR LRD_WF_SuppReconfigure(void);
 
 SDCERR LRD_WF_SuppDisconnect(void);
@@ -869,3 +880,9 @@ SDCERR LRD_ENI_Init();
 SDCERR LRD_ENI_EnableHostAPD(char * interfaceName);
 
 SDCERR LRD_ENI_DisableHostAPD(char * interfaceName);
+
+SDCERR LRD_WF_SetSuppLogLevel(WF_SUPP_LOGLEVEL level);
+
+SDCERR LRD_WF_Driver_set_debug(LRD_WF_DRV_DEBUG level, int dbgmask);
+
+SDCERR setIgnoreNullSsid(unsigned long value);
