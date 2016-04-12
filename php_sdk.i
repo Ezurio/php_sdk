@@ -455,6 +455,10 @@ typedef struct _CRYPT {
 	unsigned long offset;
 } CRYPT;
 
+#define MIN_PSP_DELAY 10
+#define MAX_PSP_DELAY 500
+#define DEFAULT_PSP_DELAY 200
+
 typedef struct _SDCConfig {
 	char        configName[CONFIG_NAME_SZ];
 	char        SSID[SSID_SZ];
