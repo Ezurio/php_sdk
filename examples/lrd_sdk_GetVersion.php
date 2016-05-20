@@ -76,6 +76,18 @@ if($result == SDCERR_SUCCESS){
 else{
 	print "Driver not loaded.  Unable to check driver version.\n";
 }
+
+$firmwareStringLength = new_intp();
+intp_assign($firmwareStringLength,80);
+$firmwareString = str_repeat(" ",intp_value($firmwareStringLength));
+$firmwareSDCERR = LRD_WF_GetFirmwareVersionString($firmwareString, $firmwareStringLength);
+if ($firmwareSDCERR == SDCERR_SUCCESS){
+	print "Firmware: " . $firmwareString . "\n";
+}else{
+	print "Firmware not loaded.  Unable to check firmware version.\n";
+}
+delete_intp($firmwareStringLength);
+
 $SDCSupp = system('sdcsupp -v', $result);
 if($result == SDCERR_SUCCESS){
 	print $SDCSupp;

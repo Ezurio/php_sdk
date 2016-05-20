@@ -853,6 +853,8 @@ SDCERR LRD_WF_HostAPDConfGetKeyValue( const char * key, char *value, int len );
 
 SDCERR LRD_WF_GetIpV6Address(LRD_WF_ipv6names ipv6names[], size_t *arr_size);
 
+SDCERR LRD_WF_GetFirmwareVersionString(char *version, int *bufSize);
+
 SDCERR LRD_ENI_SetMethod(char * interfaceName,char * method);
 
 SDCERR LRD_ENI_AutoStartOn(char *interfaceName);

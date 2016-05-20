@@ -29,6 +29,15 @@ class StackTest extends PHPUnit_Framework_TestCase
 		$status = new CF10G_STATUS();
 		$this->assertEquals(SDCERR_SUCCESS, GetCurrentStatus($status));
 	}
+
+	public function testLRD_WF_GetFirmwareVersionString()
+	{
+		$firmwareStringLength = new_intp();
+		intp_assign($firmwareStringLength,80);
+		$firmwareString = str_repeat(" ",intp_value($firmwareStringLength));
+		$this->assertEquals(SDCERR_SUCCESS, LRD_WF_GetFirmwareVersionString($firmwareString, $firmwareStringLength));
+		delete_intp($firmwareStringLength);
+	}
 }
 
 ?>
