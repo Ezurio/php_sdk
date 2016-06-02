@@ -34,11 +34,42 @@
 %pointer_functions( RADIOCHIPSET, RADIOCHIPSETp )
 %pointer_functions( WF_SUPP_LOGLEVEL, WF_SUPP_LOGLEVELp )
 %pointer_functions( LRD_WF_DRV_DEBUG, LRD_WF_DRV_DEBUGp )
+%pointer_functions( SDCERR, SDCERRp )
 %array_functions( unsigned char, uchar_array )
 %array_functions( unsigned long, ulong_array )
 %array_functions( SDCConfig, SDCConfig_array )
 %nodefaultdtor _SDCConfig;
 %free( SDCConfig );
+
+%define ALLOCLIST(type,name)
+%inline %{
+type *new_ ## name (int *numEntries, SDCERR *ret) {
+	SDCERR sdcError = SDCERR_FAIL;
+	LRD_WF_BSSID_LIST *list = NULL;
+	list = (LRD_WF_BSSID_LIST *) malloc(sizeof(LRD_WF_BSSID_LIST) + (sizeof(LRD_WF_SCAN_ITEM_INFO) * (*numEntries-1)));
+	memset(list,0,sizeof(LRD_WF_BSSID_LIST) + (sizeof(LRD_WF_SCAN_ITEM_INFO) * (*numEntries-1)));
+	sdcError = LRD_WF_GetBSSIDList(list, numEntries);
+	*ret = sdcError;
+	LRD_WF_SCAN_ITEM_INFO *item = NULL;
+	item = malloc(sizeof(LRD_WF_SCAN_ITEM_INFO) * *numEntries);
+	memcpy (item, list->Bssid, sizeof(LRD_WF_SCAN_ITEM_INFO) * *numEntries);
+	free(list);
+	return item;
+}
+type *name ## _get(type *list, int index) {
+	LRD_WF_SCAN_ITEM_INFO *item = NULL;
+
+	item = &list[index];
+
+	return item;
+}
+void delete_ ## name(type *t) {
+	free(t);
+}
+%}
+%enddef
+
+ALLOCLIST(LRD_WF_SCAN_ITEM_INFO,LRD_WF_PHP_GetBSSIDList)
 
 #define LRD_PHP_SDK_VERSION_MAJOR 3
 #define LRD_PHP_SDK_VERSION_MINOR 5
