@@ -912,11 +912,15 @@ SDCERR LRD_ENI_AddInterface(char *interfaceName);
 
 SDCERR LRD_ENI_RemoveInterface(char *interfaceName);
 
-SDCERR LRD_ENI_Init();
-
 SDCERR LRD_ENI_EnableHostAPD(char * interfaceName);
 
 SDCERR LRD_ENI_DisableHostAPD(char * interfaceName);
+
+SDCERR LRD_ENI_ClearProperty(char * interfaceName,char * prop);
+
+SDCERR LRD_ENI_DisableNat(char *);
+
+SDCERR LRD_ENI_EnableNat(char *);
 
 SDCERR LRD_WF_SetSuppLogLevel(WF_SUPP_LOGLEVEL level);
 
