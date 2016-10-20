@@ -922,6 +922,32 @@ SDCERR LRD_ENI_DisableNat(char *);
 
 SDCERR LRD_ENI_EnableNat(char *);
 
+SDCERR LRD_ENI_SetMethod6(char * interfaceName,char * method);
+
+SDCERR LRD_ENI_SetAddress6(char *interfaceName, char *address);
+
+SDCERR LRD_ENI_SetNetmask6(char *interfaceName, char *address);
+
+SDCERR LRD_ENI_SetGateway6(char *interfaceName, char *address);
+
+SDCERR LRD_ENI_SetNameserver6(char *interfaceName, char *address);
+
+SDCERR LRD_ENI_EnableInterface6(char *interfaceName);
+
+SDCERR LRD_ENI_DisableInterface6(char *interfaceName);
+
+SDCERR LRD_ENI_AddInterface6(char *interfaceName);
+
+SDCERR LRD_ENI_RemoveInterface6(char *interfaceName);
+
+SDCERR LRD_ENI_ClearProperty6(char * interfaceName,char * prop);
+
+SDCERR LRD_ENI_DisableNat6(char *);
+
+SDCERR LRD_ENI_EnableNat6(char *);
+
+SDCERR LRD_ENI_SetDhcp6(char *, char *);
+
 SDCERR LRD_WF_SetSuppLogLevel(WF_SUPP_LOGLEVEL level);
 
 SDCERR LRD_WF_Driver_set_debug(LRD_WF_DRV_DEBUG level, int dbgmask);
