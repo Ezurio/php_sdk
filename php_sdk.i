@@ -26,6 +26,7 @@
 %include "cmalloc.i"
 %pointer_functions( unsigned long, ulongp )
 %pointer_functions( int, intp )
+%pointer_functions( size_t, size_tp )
 %pointer_functions( FCC_TEST, FCC_TESTp )
 %pointer_functions( BITRATE, BITRATEp )
 %pointer_functions( TXPOWER, TXPOWERp )
@@ -70,6 +71,32 @@ void delete_ ## name(type *t) {
 %enddef
 
 ALLOCLIST(LRD_WF_SCAN_ITEM_INFO,LRD_WF_PHP_GetBSSIDList)
+
+%define ALLOCIPLIST(type,name)
+%inline %{
+type *new_ ## name (size_t *arr_size, SDCERR *ret) {
+	SDCERR sdcError = SDCERR_FAIL;
+	LRD_WF_ipv6names *ipnames = NULL;
+	ipnames	= malloc(sizeof(LRD_WF_ipv6names) * *arr_size);
+	sdcError = LRD_WF_GetIpV6Address(ipnames, arr_size);
+	*ret = sdcError;
+	return ipnames;
+
+}
+char *name ## _get(type *list, int index) {
+	LRD_WF_ipv6names *ipnames = NULL;
+
+	ipnames = &list[index];
+
+	return (char *) ipnames;
+}
+void delete_ ## name(type *t) {
+	free(t);
+}
+%}
+%enddef
+
+ALLOCIPLIST(LRD_WF_ipv6names,LRD_WF_PHP_GetIpV6Address)
 
 #define LRD_PHP_SDK_VERSION_MAJOR 3
 #define LRD_PHP_SDK_VERSION_MINOR 5
@@ -623,7 +650,7 @@ typedef struct _CF10G_STATUS {
 	unsigned long beaconsReceived;
 } CF10G_STATUS;
 
-typedef unsigned char LRD_WF_ipv6names[INET6_ADDRSTRLEN];
+typedef char LRD_WF_ipv6names[INET6_ADDRSTRLEN];
 typedef CF10G_STATUS SDC_STATUS, *PSDC_STATUS;
 
 typedef struct _CONFIG_FILE_INFO {

@@ -147,6 +147,30 @@ if($rval == SDCERR_SUCCESS){
 	}
 	print "\n";
 
+	$result = new_SDCERRp();
+	$numElements = new_size_tp();
+	$numEntries = 5;
+	size_tp_assign($numElements,$numEntries);
+	$list = lrd_php_sdk::new_LRD_WF_PHP_GetIpV6Address($numElements,$result);
+	if (SDCERRp_value($result) == SDCERR_INSUFFICIENT_MEMORY){ //  make one more try
+		lrd_php_sdk::delete_LRD_WF_PHP_GetIpV6Address($list);
+		$numEntries += 5;
+		size_tp_assign($numElements,$numEntries);
+		$list = lrd_php_sdk::new_LRD_WF_PHP_GetIpV6Address($numElements,$result);
+	}
+	if (SDCERRp_value($result) == SDCERR_SUCCESS){
+		for($h = 0; $h < size_tp_value($numElements); $h++){
+			unset($item);
+			unset($ipv6Address);
+			$item = lrd_php_sdk::LRD_WF_PHP_GetIpV6Address_get($list,$h);
+			echo "IPv6" . ": " . $item . "\n";
+		}
+	}
+
+	lrd_php_sdk::delete_LRD_WF_PHP_GetIpV6Address($list);
+	delete_size_tp($numElements);
+	delete_SDCERRp($result);
+
 	print "AP Name: $status->APName\n";
 	print "AP MAC: $APMAC\n";
 	print "AP IP: $APIP\n";
