@@ -36,7 +36,7 @@ endif
 all: $(LIB)
 
 php_sdk_wrap.c: php_sdk.i
-	$(BUILD_PATH)swig -php5 php_sdk.i
+	$(BUILD_PATH)swig -php7 php_sdk.i
 
 $(LIB): $(OBJS)
 	$(CC) -shared $(OBJS) -o $(LIB).so.$(PHP_SDK_REV) $(LIBS)
