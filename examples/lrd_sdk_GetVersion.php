@@ -5,20 +5,33 @@ if(!extension_loaded('lrd_php_sdk')){
 	print "ERROR: failed to load lrd_php_sdk\n";
 }
 
-$SDKVersion = new_ulongp();
-$result = GetSDKVersion($SDKVersion);
-$SDKVersionValue = ulongp_value($SDKVersion);
+$SDKBuild = new_ulongp();
+$result = GetSDKBuild($SDKBuild);
+$SDKBuildValue = ulongp_value($SDKBuild);
 if($result == SDCERR_SUCCESS){
 	print "SDK: ";
-	print (($SDKVersionValue & 0xff000000) >> 24);
-	print "." . (($SDKVersionValue & 0xff0000) >> 16);
-	print "." . (($SDKVersionValue & 0xff00) >> 8);
-	print "." . ($SDKVersionValue & 0xff);
-	print "\n";
-}
-delete_ulongp($SDKVersion);
+	print (($SDKBuildValue & 0xff000000) >> 24);
+	print "." . (($SDKBuildValue & 0xff0000) >> 16);
+	print "." . (($SDKBuildValue & 0xff00) >> 8);
+	print "." . ($SDKBuildValue & 0xff);
 
-print "PHP_SDK version: " . LRD_PHP_SDK_VERSION_MAJOR . "." . LRD_PHP_SDK_VERSION_MINOR . "." . LRD_PHP_SDK_VERSION_REVISION . "." . LRD_PHP_VERSION_SUB_REVISION . "\n";
+	$SDKVersion = new_ulongp();
+	$result = GetSDKVersion($SDKVersion);
+	if($result == SDCERR_SUCCESS){
+		$SDKVersionValue = ulongp_value($SDKVersion);
+		print "-";
+		print (($SDKVersionValue & 0xff000000) >> 24);
+		print "." . (($SDKVersionValue & 0xff0000) >> 16);
+		print "." . (($SDKVersionValue & 0xff00) >> 8);
+		print "." . ($SDKVersionValue & 0xff);
+	}
+	print "\n";
+	delete_ulongp($SDKVersion);
+}
+delete_ulongp($SDKBuild);
+
+print "PHP_SDK version: " . LRD_PHP_SDK_BUILD_MAJOR . "." . LRD_PHP_SDK_BUILD_MINOR . "." . LRD_PHP_SDK_BUILD_REVISION . "." . LRD_PHP_SDK_BUILD_SUB_REVISION;
+print "-" .LRD_PHP_SDK_VERSION_MAJOR . "." . LRD_PHP_SDK_VERSION_MINOR . "." . LRD_PHP_SDK_VERSION_REVISION . "." . LRD_PHP_VERSION_SUB_REVISION . "\n";
 
 $rcs = new_RADIOCHIPSETp();
 $result = LRD_WF_GetRadioChipSet($rcs);

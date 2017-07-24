@@ -98,6 +98,11 @@ void delete_ ## name(type *t) {
 
 ALLOCIPLIST(LRD_WF_ipv6names,LRD_WF_PHP_GetIpV6Address)
 
+#define LRD_PHP_SDK_BUILD_MAJOR 3
+#define LRD_PHP_SDK_BUILD_MINOR 5
+#define LRD_PHP_SDK_BUILD_REVISION 5
+#define LRD_PHP_SDK_BUILD_SUB_REVISION 0
+
 #define LRD_PHP_SDK_VERSION_MAJOR 3
 #define LRD_PHP_SDK_VERSION_MINOR 5
 #define LRD_PHP_SDK_VERSION_REVISION 2
@@ -758,6 +763,8 @@ SDCERR updateSROM();
 SDCERR testTxData(unsigned char start, char pattern);
 
 SDCERR setMonitorMode(unsigned long enable, unsigned long channel, unsigned long slice, void *buffer, unsigned long bufferSize);
+
+SDCERR GetSDKBuild(unsigned long *build);
 
 SDCERR GetSDKVersion(unsigned long *version);
 
