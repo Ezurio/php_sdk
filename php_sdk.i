@@ -703,6 +703,21 @@ typedef struct _DHCP_LEASE {
 	char expire[30];
 } DHCP_LEASE;
 
+#define LRD_ROUTE_STR_SZ 20
+#define LRD_ROUTE_FILE "/proc/net/route"
+
+typedef struct _DEFAULT_ROUTE {
+	char interface[LRD_ROUTE_STR_SZ];
+	char destination[LRD_ROUTE_STR_SZ];
+	char gateway[LRD_ROUTE_STR_SZ];
+	int flags;
+	unsigned int metric;
+	char subnet_mask[LRD_ROUTE_STR_SZ];
+	unsigned int mtu;
+	unsigned int window;
+	unsigned int irtt;
+} DEFAULT_ROUTE;
+
 SDCERR GetCurrentConfig(unsigned long *num, char *name);
 
 SDCERR ModifyConfig(char *name, SDCConfig *cfg);
@@ -899,6 +914,8 @@ SDCERR LRD_WF_GetPilInfo(LRD_WF_PilInfo *pil_info);
 SDCERR LRD_WF_GetDHCPLease(DHCP_LEASE *dhcpLease);
 
 SDCERR LRD_WF_GetDHCPIPv4Lease(DHCP_LEASE *dhcpLease, char *interface);
+
+SDCERR LRD_WF_GetDefaultRoute(DEFAULT_ROUTE *default_route, char *file, char *interface);
 
 SDCERR LRD_WF_GetFipsStatus(char * current, char * nextStart);
 
