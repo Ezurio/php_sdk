@@ -898,6 +898,8 @@ SDCERR LRD_WF_GetPilInfo(LRD_WF_PilInfo *pil_info);
 
 SDCERR LRD_WF_GetDHCPLease(DHCP_LEASE *dhcpLease);
 
+SDCERR LRD_WF_GetDHCPIPv4Lease(DHCP_LEASE *dhcpLease, char *interface);
+
 SDCERR LRD_WF_GetFipsStatus(char * current, char * nextStart);
 
 enum WF_SUPP_LOGLEVEL {
