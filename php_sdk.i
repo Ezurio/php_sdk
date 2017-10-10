@@ -19,6 +19,7 @@
 %module lrd_php_sdk
 %{
 	#include "sdc_sdk.h"
+	#include "lrd_sdk_eni.h"
 %}
 %include <carrays.i>
 %include "cpointer.i"
@@ -943,9 +944,15 @@ SDCERR LRD_WF_GetFirmwareVersionString(char *version, int *bufSize);
 
 SDCERR LRD_ENI_SetMethod(char * interfaceName,char * method);
 
+SDCERR LRD_ENI_GetMethod(char * interfaceName,char * method, size_t buff_len);
+
 SDCERR LRD_ENI_AutoStartOn(char *interfaceName);
 
 SDCERR LRD_ENI_AutoStartOff(char *interfaceName);
+
+SDCERR LRD_ENI_GetAutoStart(char * interfaceName, int * autoStart);
+
+SDCERR LRD_ENI_GetInterfacePropertyValue(char *interfaceName, char *prop, char *value, size_t buff_len);
 
 SDCERR LRD_ENI_SetAddress(char *interfaceName, char *address);
 
@@ -967,15 +974,23 @@ SDCERR LRD_ENI_AddInterface(char *interfaceName);
 
 SDCERR LRD_ENI_RemoveInterface(char *interfaceName);
 
+SDCERR LRD_ENI_GetHostAPD(char * interfaceName, int * hostapd);
+
 SDCERR LRD_ENI_EnableHostAPD(char * interfaceName);
 
 SDCERR LRD_ENI_DisableHostAPD(char * interfaceName);
 
 SDCERR LRD_ENI_ClearProperty(char * interfaceName,char * prop);
 
+SDCERR LRD_ENI_GetNat(char * interfaceName, int * nat);
+
 SDCERR LRD_ENI_DisableNat(char *);
 
 SDCERR LRD_ENI_EnableNat(char *);
+
+SDCERR LRD_ENI_GetInterfacePropertyValue6(char *interfaceName, char *prop, char *value, size_t buff_len);
+
+SDCERR LRD_ENI_GetMethod6(char * interfaceName,char * method, size_t buff_len);
 
 SDCERR LRD_ENI_SetMethod6(char * interfaceName,char * method);
 
@@ -996,6 +1011,8 @@ SDCERR LRD_ENI_AddInterface6(char *interfaceName);
 SDCERR LRD_ENI_RemoveInterface6(char *interfaceName);
 
 SDCERR LRD_ENI_ClearProperty6(char * interfaceName,char * prop);
+
+SDCERR LRD_ENI_GetNat6(char *interfaceName, int *nat);
 
 SDCERR LRD_ENI_DisableNat6(char *);
 
