@@ -1,6 +1,6 @@
 /*
 #
-# Copyright (c) 2015, Laird
+# Copyright (c) 2015, Laird Connectivity
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -20,6 +20,9 @@
 %{
 	#include "sdc_sdk.h"
 	#include "lrd_sdk_eni.h"
+
+	SDCERR LRD_WF_GetSuppLogLevel(WF_SUPP_LOGLEVEL *level);
+	SDCERR setIgnoreNullSsid(unsigned long value);
 %}
 %include <carrays.i>
 %include "cpointer.i"
