@@ -932,8 +932,6 @@ enum WF_SUPP_LOGLEVEL {
 	WF_SUPP_DBG_EXCESSIVE
 };
 
-SDCERR LRD_WF_SuppLogLevel(WF_SUPP_LOGLEVEL level);
-
 SDCERR LRD_WF_GetSuppLogLevel(WF_SUPP_LOGLEVEL *level);
 
 typedef enum _LRD_WF_DRV_DEBUG {
