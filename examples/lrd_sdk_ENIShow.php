@@ -1,5 +1,4 @@
 <?php
-include("../lrd_php_sdk.php");
 $ENABLE = 0;
 $DISABLE = -1;
 $EMPTY = -2;
