@@ -1,6 +1,5 @@
 <?php
 
-include("../lrd_php_sdk.php");
 if(!extension_loaded('lrd_php_sdk')){
         print "ERROR: failed to load lrd_php_sdk\n";
 }
