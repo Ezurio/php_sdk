@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2015, Laird
+# Copyright (c) 2015, Ezurio
 #
 # Permission to use, copy, modify, and/or distribute this software for any
 # purpose with or without fee is hereby granted, provided that the above
@@ -12,10 +12,10 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #--------------------------------------------------------------------------
-$(info Building Laird PHP SDK wrapper)
+$(info Building PHP SDK wrapper)
 
 ifndef INCLUDES
-$(warning INCLUDES variable should contain PHPs includes and Lairds SDK header files)
+$(warning INCLUDES variable should contain PHPs includes and SDCSDK header files)
 endif
 
 CPPFLAGS += $(INCLUDES)
